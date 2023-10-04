@@ -1,0 +1,99 @@
+{% extends 'bases/base.html' %}
+{% load static %}
+
+{% block 'head' %}
+<link rel="stylesheet" href="{% static 'usuarios/css/css.css' %}">
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+<br>
+<br>
+<div class="container">
+
+    {% if messages %}
+        {% for message in  messages %}   
+            <div class="alert {{message.tags}}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <h3 class="font-destaque">Cadastre-se</h3>
+    <div class="row">
+        <div class="col-md-3" style="text-align: center">
+            <img src="{% static 'geral/img/logo.png' %}" alt="">
+            <h3>VitaLab</h3>
+        </div>
+        <div class="col-md-9">
+            <form action="{{ form_action }}" method="POST">
+
+                {% csrf_token %}
+                
+                <label> Primeiro nome</label>
+                <br>
+               {{ form.first_name}}
+               {% if form.first_name.errors %}
+                    {% for error in form.first_name.errors  %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+                <br>
+                <br>
+                <label>Último nome</label>
+                <br>
+                {{form.last_name}}
+                {% if form.last_name.errors %}
+                    {% for error in form.last_name.errors  %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label>Username</label>
+            <br>
+            {{ form.username}}
+            {% if form.username.errors %}
+                    {% for error in form.username.errors  %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
+            <br>
+            <br>
+            <label>Senha</label>
+            <br>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                    {% for error in form.password1.errors  %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <label>E-mail</label>
+            <br>
+            {{ form.email }}
+            {% if form.email.errors %}
+                    {% for error in form.email.errors  %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
+            <br>
+            <br>
+            <label>Confirmar senha</label>
+            <br>
+           {{ form.password2 }}
+           {% if form.password2.errors %}
+                    {% for error in form.password2.errors  %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <br>
+    <input type="submit" class="btn-default" value="Cadastrar">
+    </form>
+</div>
+
+{% endblock %}

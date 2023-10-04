@@ -1,0 +1,12 @@
+body{
+
+    background-image: url('/static/geral/img/bg1.png');
+    background-size: cover;
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+}
+
+p{
+    color: var(--light-color);
+}
