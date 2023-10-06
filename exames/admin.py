@@ -13,3 +13,8 @@ class SolicitacaoExameAdmin(admin.ModelAdmin):
 @admin.register(models.PedidosExame)
 class PedidosExamesAdmin(admin.ModelAdmin):
     list_display = ('usuario', 'agendado', 'data')
+
+@admin.register(models.AcessoMedico)
+class AcessoMedicoAdmin(admin.ModelAdmin):
+    list_display = ('usuario', 'identificacao', 'tempo_de_acesso', 'criado_em',
+                     'data_exames_iniciais', 'data_exames_finais', 'token')

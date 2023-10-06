@@ -1,7 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
+from django.utils import timezone
+from django.conf import settings
+from secrets import token_urlsafe
+from datetime import timedelta
 import datetime
+
 TIPO_CHOICES = (
     ('I', 'Exame de imagem'),
     ('S', 'Exame de sangue'),
@@ -11,6 +16,7 @@ STATUS_CHOICES = (
     ('E', 'Em análise'),
     ('F', 'Finalizado')
 )
+
 class TiposExame(models.Model):
     nome = models.CharField(max_length=50)
     tipo = models.CharField(max_length=1, choices=TIPO_CHOICES)
@@ -52,3 +58,29 @@ class PedidosExame(models.Model):
     
     def __str__(self):
         return f'{self.usuario} | {self.data}'
+
+class AcessoMedico(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    identificacao = models.CharField(max_length=50)
+    tempo_de_acesso = models.IntegerField() # Em horas
+    criado_em = models.DateTimeField(default=datetime.datetime.now)
+    data_exames_iniciais = models.DateField()
+    data_exames_finais = models.DateField()
+    token = models.CharField(max_length=20, null=True, blank=True)
+
+    @property 
+    def status(self):
+        return 'Expirado' if timezone.now() > (self.criado_em + timedelta(hours=self.tempo_de_acesso)) else 'Ativo'
+        
+    @property
+    def url(self):
+        return f'{settings.URL_LINKS}exames/acesso_medico/{self.token}'
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = token_urlsafe(6)
+
+        super(AcessoMedico, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.token
